@@ -11,6 +11,7 @@ import com.ecommerce.domain.model.OrderProduct;
 import com.ecommerce.domain.model.Product;
 import com.ecommerce.domain.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
+@Slf4j
 public class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
