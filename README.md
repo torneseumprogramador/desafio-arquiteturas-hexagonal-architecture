@@ -121,6 +121,8 @@ mvn spring-boot:run
 Após executar o projeto, a API estará disponível em:
 
 - **API Base**: http://localhost:8080
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **OpenAPI JSON**: http://localhost:8080/v3/api-docs
 - **pgAdmin**: http://localhost:8081 (admin@admin.com / admin)
 
 ## 🔧 Configuração do Banco de Dados
@@ -169,7 +171,6 @@ docker-compose logs postgres
 |--------|----------|-----------|
 | POST | `/api/users` | Criar usuário |
 | GET | `/api/users` | Listar todos os usuários |
-| GET | `/api/test/users` | Contar usuários (teste) |
 
 **Exemplo de criação de usuário:**
 ```bash
@@ -188,7 +189,6 @@ curl -X POST "http://localhost:8080/api/users" \
 |--------|----------|-----------|
 | POST | `/api/products` | Criar produto |
 | GET | `/api/products` | Listar todos os produtos |
-| GET | `/api/test/products` | Contar produtos (teste) |
 
 **Exemplo de criação de produto:**
 ```bash
@@ -208,7 +208,6 @@ curl -X POST "http://localhost:8080/api/products" \
 |--------|----------|-----------|
 | POST | `/api/orders` | Criar pedido |
 | GET | `/api/orders` | Listar todos os pedidos |
-| GET | `/api/test/orders` | Contar pedidos (teste) |
 
 ### 🏥 Health Check
 
@@ -223,6 +222,13 @@ curl -X POST "http://localhost:8080/api/products" \
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | GET | `/` | Informações da API e endpoints disponíveis |
+
+### 📚 Documentação
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/swagger-ui.html` | Interface web do Swagger |
+| GET | `/v3/api-docs` | Especificação OpenAPI em JSON |
 
 **Exemplo de criação de pedido:**
 ```bash
@@ -255,6 +261,9 @@ curl http://localhost:8080/health/database
 
 # Informações da API
 curl http://localhost:8080/
+
+# Documentação OpenAPI
+curl http://localhost:8080/v3/api-docs
 ```
 
 ## 🏛️ Conceitos de Arquitetura Hexagonal Implementados
@@ -323,6 +332,7 @@ curl -X POST "http://localhost:8080/api/orders" \
 - ✅ **Arquitetura Hexagonal** com separação clara de responsabilidades
 - ✅ **Docker Compose** para PostgreSQL e pgAdmin
 - ✅ **Script de automação** para facilitar o desenvolvimento
+- ✅ **Swagger/OpenAPI** para documentação interativa da API
 
 ## 🎓 Aprendizados do Curso
 
@@ -392,30 +402,12 @@ curl -X POST http://localhost:8080/api/products \
   -d '{"name":"Smartphone","description":"Smartphone novo","price":1299.99,"stockQuantity":10}'
 ```
 
-3. **Verificar dados salvos:**
-```bash
-curl http://localhost:8080/api/test/users
-curl http://localhost:8080/api/test/products
-```
-
-4. **Criar um pedido:**
+3. **Criar um pedido:**
 ```bash
 curl -X POST http://localhost:8080/api/orders \
   -H "Content-Type: application/json" \
   -d '{"userId":1,"productQuantities":{"1":2}}'
 ```
-
-5. **Criar um pedido (teste):**
-```bash
-curl http://localhost:8080/api/test/create-order
-```
-
-### Endpoints de Teste
-
-- `GET /api/test/users` - Conta usuários no banco
-- `GET /api/test/products` - Conta produtos no banco  
-- `GET /api/test/orders` - Conta pedidos no banco
-- `GET /api/test/create-order` - Cria um pedido de teste
 
 ### Acessando o pgAdmin
 

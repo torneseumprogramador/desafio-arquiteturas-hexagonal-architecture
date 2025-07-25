@@ -5,6 +5,8 @@ import com.ecommerce.adapters.in.rest.dto.ProductResponse;
 import com.ecommerce.application.ports.in.CreateProductUseCase;
 import com.ecommerce.application.ports.out.ProductRepository;
 import com.ecommerce.domain.model.Product;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
+@Tag(name = "Produtos", description = "Endpoints para gerenciamento de produtos")
 public class ProductController {
 
     private final CreateProductUseCase createProductUseCase;
     private final ProductRepository productRepository;
 
     @PostMapping
+    @Operation(summary = "Criar Produto", description = "Cria um novo produto no sistema")
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest request) {
         Product product = createProductUseCase.createProduct(
                 request.getName(),
@@ -42,6 +46,7 @@ public class ProductController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar Produtos", description = "Retorna todos os produtos cadastrados no sistema")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<Product> products = productRepository.findAll();
         List<ProductResponse> responses = products.stream()

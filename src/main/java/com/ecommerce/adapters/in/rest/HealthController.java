@@ -1,5 +1,7 @@
 package com.ecommerce.adapters.in.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +18,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/health")
+@Tag(name = "Health Check", description = "Endpoints de monitoramento da saúde da aplicação")
 public class HealthController {
     
     @Autowired
     private DataSource dataSource;
     
     @GetMapping
+    @Operation(summary = "Health Check Geral", description = "Verifica o status geral da aplicação e banco de dados")
     public ResponseEntity<Map<String, Object>> healthCheck() {
         Map<String, Object> healthStatus = new HashMap<>();
         Map<String, Object> status = new HashMap<>();
@@ -59,6 +63,7 @@ public class HealthController {
     }
     
     @GetMapping("/ping")
+    @Operation(summary = "Ping", description = "Teste simples de conectividade da aplicação")
     public ResponseEntity<Map<String, String>> ping() {
         Map<String, String> response = new HashMap<>();
         response.put("status", "pong");
@@ -67,6 +72,7 @@ public class HealthController {
     }
     
     @GetMapping("/database")
+    @Operation(summary = "Health Check do Banco", description = "Verifica o status detalhado da conexão com o banco de dados")
     public ResponseEntity<Map<String, Object>> databaseHealth() {
         Map<String, Object> databaseStatus = new HashMap<>();
         

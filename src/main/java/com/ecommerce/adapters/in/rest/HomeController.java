@@ -1,16 +1,21 @@
 package com.ecommerce.adapters.in.rest;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@Tag(name = "Home", description = "Endpoints de informações da API")
 public class HomeController {
     
     @GetMapping("/")
+    @Operation(summary = "Informações da API", description = "Retorna informações sobre a API, arquitetura e endpoints disponíveis")
     public ResponseEntity<Map<String, Object>> home() {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "E-commerce Hexagonal Architecture API");
@@ -32,14 +37,11 @@ public class HomeController {
         healthEndpoints.put("ping", "/health/ping");
         healthEndpoints.put("database", "/health/database");
         response.put("health", healthEndpoints);
-        
-        // Endpoints de Teste
-        Map<String, Object> testEndpoints = new HashMap<>();
-        testEndpoints.put("users", "/api/test/users");
-        testEndpoints.put("products", "/api/test/products");
-        testEndpoints.put("orders", "/api/test/orders");
-        testEndpoints.put("create-order", "/api/test/create-order");
-        response.put("test", testEndpoints);
+
+        // Documentação
+        Map<String, Object> documentation = new HashMap<>();
+        documentation.put("swagger", "/swagger-ui.html");
+        response.put("documentation", documentation);
         
         // Informações adicionais
         Map<String, Object> info = new HashMap<>();
@@ -51,4 +53,4 @@ public class HomeController {
         
         return ResponseEntity.ok(response);
     }
-} 
+}

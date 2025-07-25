@@ -11,6 +11,8 @@ import com.ecommerce.domain.model.Order;
 import com.ecommerce.domain.model.OrderProduct;
 import com.ecommerce.domain.model.Product;
 import com.ecommerce.domain.model.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,12 +27,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Pedidos", description = "Endpoints para gerenciamento de pedidos")
 public class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
     private final OrderRepository orderRepository;
 
     @PostMapping
+    @Operation(summary = "Criar Pedido", description = "Cria um novo pedido com múltiplos produtos")
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         Order order = createOrderUseCase.createOrder(
                 request.getUserId(),
@@ -44,6 +48,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar Pedidos", description = "Retorna todos os pedidos cadastrados no sistema")
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderResponse> responses = orders.stream()
