@@ -6,6 +6,7 @@ import com.ecommerce.adapters.in.rest.dto.OrderResponse;
 import com.ecommerce.adapters.in.rest.dto.ProductResponse;
 import com.ecommerce.adapters.in.rest.dto.UserResponse;
 import com.ecommerce.application.ports.in.CreateOrderUseCase;
+import com.ecommerce.application.ports.out.OrderRepository;
 import com.ecommerce.domain.model.Order;
 import com.ecommerce.domain.model.OrderProduct;
 import com.ecommerce.domain.model.Product;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
+    private final OrderRepository orderRepository;
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
@@ -39,6 +41,15 @@ public class OrderController {
 
         OrderResponse response = toOrderResponse(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderResponse> responses = orders.stream()
+                .map(this::toOrderResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responses);
     }
 
     private OrderResponse toOrderResponse(Order order) {

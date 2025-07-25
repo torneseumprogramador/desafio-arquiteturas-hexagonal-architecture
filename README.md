@@ -168,7 +168,8 @@ docker-compose logs postgres
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/api/users` | Criar usuário |
-| GET | `/api/test/users` | Listar todos os usuários (teste) |
+| GET | `/api/users` | Listar todos os usuários |
+| GET | `/api/test/users` | Contar usuários (teste) |
 
 **Exemplo de criação de usuário:**
 ```bash
@@ -186,7 +187,8 @@ curl -X POST "http://localhost:8080/api/users" \
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/api/products` | Criar produto |
-| GET | `/api/test/products` | Listar todos os produtos (teste) |
+| GET | `/api/products` | Listar todos os produtos |
+| GET | `/api/test/products` | Contar produtos (teste) |
 
 **Exemplo de criação de produto:**
 ```bash
@@ -205,7 +207,22 @@ curl -X POST "http://localhost:8080/api/products" \
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/api/orders` | Criar pedido |
-| GET | `/api/test/orders` | Listar todos os pedidos (teste) |
+| GET | `/api/orders` | Listar todos os pedidos |
+| GET | `/api/test/orders` | Contar pedidos (teste) |
+
+### 🏥 Health Check
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/health` | Status geral da aplicação e banco |
+| GET | `/health/ping` | Teste simples de conectividade |
+| GET | `/health/database` | Status detalhado do banco de dados |
+
+### 🏠 Home
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/` | Informações da API e endpoints disponíveis |
 
 **Exemplo de criação de pedido:**
 ```bash
@@ -217,6 +234,27 @@ curl -X POST "http://localhost:8080/api/orders" \
       "1": 2
     }
   }'
+```
+
+**Exemplos de consulta:**
+```bash
+# Listar todos os usuários
+curl http://localhost:8080/api/users
+
+# Listar todos os produtos
+curl http://localhost:8080/api/products
+
+# Listar todos os pedidos
+curl http://localhost:8080/api/orders
+
+# Health check geral
+curl http://localhost:8080/health
+
+# Health check do banco
+curl http://localhost:8080/health/database
+
+# Informações da API
+curl http://localhost:8080/
 ```
 
 ## 🏛️ Conceitos de Arquitetura Hexagonal Implementados
