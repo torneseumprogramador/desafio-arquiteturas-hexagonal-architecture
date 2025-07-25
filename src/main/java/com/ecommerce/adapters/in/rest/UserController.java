@@ -1,8 +1,11 @@
 package com.ecommerce.adapters.in.rest;
 
 import com.ecommerce.adapters.in.rest.dto.CreateUserRequest;
+import com.ecommerce.adapters.in.rest.dto.UpdateUserRequest;
 import com.ecommerce.adapters.in.rest.dto.UserResponse;
 import com.ecommerce.application.ports.in.CreateUserUseCase;
+import com.ecommerce.application.ports.in.UpdateUserUseCase;
+import com.ecommerce.application.ports.in.DeleteUserUseCase;
 import com.ecommerce.application.ports.out.UserRepository;
 import com.ecommerce.domain.model.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
     private final UserRepository userRepository;
 
     @PostMapping
@@ -40,6 +45,29 @@ public class UserController {
         response.setEmail(user.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar Usuário", description = "Atualiza um usuário existente no sistema")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateUserRequest request) {
+        
+        User user = updateUserUseCase.updateUser(
+                id,
+                request.getName(),
+                request.getEmail(),
+                request.getPassword()
+        );
+
+        return ResponseEntity.ok(toUserResponse(user));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar Usuário", description = "Remove um usuário do sistema")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        deleteUserUseCase.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

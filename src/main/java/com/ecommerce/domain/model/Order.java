@@ -58,6 +58,13 @@ public class Order {
         orderProducts.remove(orderProduct);
     }
 
+    public void clearProducts() {
+        if (status != OrderStatus.PENDING) {
+            throw new IllegalArgumentException("Não é possível alterar produtos de um pedido já processado");
+        }
+        orderProducts.clear();
+    }
+
     public BigDecimal getTotalAmount() {
         return orderProducts.stream()
                 .map(OrderProduct::getTotalPrice)

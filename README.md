@@ -113,6 +113,7 @@ mvn spring-boot:run
 ./run.sh docker       # Apenas inicia Docker
 ./run.sh docker-stop  # Para containers Docker
 ./run.sh run          # Apenas executa a API
+./run.sh stop         # Para a API Spring Boot
 ./run.sh help         # Mostra ajuda
 ```
 
@@ -171,6 +172,8 @@ docker-compose logs postgres
 |--------|----------|-----------|
 | POST | `/api/users` | Criar usuário |
 | GET | `/api/users` | Listar todos os usuários |
+| PUT | `/api/users/{id}` | Atualizar usuário |
+| DELETE | `/api/users/{id}` | Deletar usuário |
 
 **Exemplo de criação de usuário:**
 ```bash
@@ -183,12 +186,30 @@ curl -X POST "http://localhost:8080/api/users" \
   }'
 ```
 
+**Exemplo de atualização de usuário:**
+```bash
+curl -X PUT "http://localhost:8080/api/users/1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "João Silva Atualizado",
+    "email": "joao.novo@email.com",
+    "password": "123456"
+  }'
+```
+
+**Exemplo de deleção de usuário:**
+```bash
+curl -X DELETE "http://localhost:8080/api/users/1"
+```
+
 ### 📦 Produtos (Product)
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/api/products` | Criar produto |
 | GET | `/api/products` | Listar todos os produtos |
+| PUT | `/api/products/{id}` | Atualizar produto |
+| DELETE | `/api/products/{id}` | Deletar produto |
 
 **Exemplo de criação de produto:**
 ```bash
@@ -202,12 +223,31 @@ curl -X POST "http://localhost:8080/api/products" \
   }'
 ```
 
+**Exemplo de atualização de produto:**
+```bash
+curl -X PUT "http://localhost:8080/api/products/1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Smartphone XYZ Pro",
+    "description": "Smartphone de última geração - Versão Pro",
+    "price": 1499.99,
+    "stockQuantity": 30
+  }'
+```
+
+**Exemplo de deleção de produto:**
+```bash
+curl -X DELETE "http://localhost:8080/api/products/1"
+```
+
 ### 🛒 Pedidos (Order)
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
 | POST | `/api/orders` | Criar pedido |
 | GET | `/api/orders` | Listar todos os pedidos |
+| PUT | `/api/orders/{id}` | Atualizar pedido (apenas pendentes) |
+| DELETE | `/api/orders/{id}` | Deletar pedido (apenas pendentes) |
 
 ### 🏥 Health Check
 
@@ -240,6 +280,24 @@ curl -X POST "http://localhost:8080/api/orders" \
       "1": 2
     }
   }'
+```
+
+**Exemplo de atualização de pedido:**
+```bash
+curl -X PUT "http://localhost:8080/api/orders/1" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": 1,
+    "productQuantities": {
+      "1": 3,
+      "3": 1
+    }
+  }'
+```
+
+**Exemplo de deleção de pedido:**
+```bash
+curl -X DELETE "http://localhost:8080/api/orders/1"
 ```
 
 **Exemplos de consulta:**
@@ -284,8 +342,14 @@ curl http://localhost:8080/v3/api-docs
 ### 🎯 Casos de Uso
 
 - **CreateUserUseCase** - Criar usuário
+- **UpdateUserUseCase** - Atualizar usuário
+- **DeleteUserUseCase** - Deletar usuário
 - **CreateProductUseCase** - Criar produto
+- **UpdateProductUseCase** - Atualizar produto
+- **DeleteProductUseCase** - Deletar produto
 - **CreateOrderUseCase** - Criar pedido com múltiplos produtos
+- **UpdateOrderUseCase** - Atualizar pedido (apenas pendentes)
+- **DeleteOrderUseCase** - Deletar pedido (apenas pendentes)
 
 ## 🧪 Exemplos de Uso
 
@@ -325,8 +389,14 @@ curl -X POST "http://localhost:8080/api/orders" \
 ## 🛡️ Funcionalidades Implementadas
 
 - ✅ **Criação de usuários** com validação de email
+- ✅ **Atualização de usuários** com validação de email único
+- ✅ **Deleção de usuários**
 - ✅ **Criação de produtos** com controle de estoque
+- ✅ **Atualização de produtos**
+- ✅ **Deleção de produtos**
 - ✅ **Criação de pedidos** com múltiplos produtos
+- ✅ **Atualização de pedidos** (apenas pendentes)
+- ✅ **Deleção de pedidos** (apenas pendentes)
 - ✅ **Controle automático de estoque** ao processar pedidos
 - ✅ **Validações de negócio** nas entidades do domínio
 - ✅ **Arquitetura Hexagonal** com separação clara de responsabilidades

@@ -1,8 +1,11 @@
 package com.ecommerce.adapters.in.rest;
 
 import com.ecommerce.adapters.in.rest.dto.CreateProductRequest;
+import com.ecommerce.adapters.in.rest.dto.UpdateProductRequest;
 import com.ecommerce.adapters.in.rest.dto.ProductResponse;
 import com.ecommerce.application.ports.in.CreateProductUseCase;
+import com.ecommerce.application.ports.in.UpdateProductUseCase;
+import com.ecommerce.application.ports.in.DeleteProductUseCase;
 import com.ecommerce.application.ports.out.ProductRepository;
 import com.ecommerce.domain.model.Product;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     private final CreateProductUseCase createProductUseCase;
+    private final UpdateProductUseCase updateProductUseCase;
+    private final DeleteProductUseCase deleteProductUseCase;
     private final ProductRepository productRepository;
 
     @PostMapping
@@ -43,6 +48,30 @@ public class ProductController {
         response.setStockQuantity(product.getStockQuantity());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar Produto", description = "Atualiza um produto existente no sistema")
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateProductRequest request) {
+        
+        Product product = updateProductUseCase.updateProduct(
+                id,
+                request.getName(),
+                request.getDescription(),
+                request.getPrice(),
+                request.getStockQuantity()
+        );
+
+        return ResponseEntity.ok(toProductResponse(product));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar Produto", description = "Remove um produto do sistema")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        deleteProductUseCase.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping

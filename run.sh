@@ -17,6 +17,7 @@ show_help() {
     echo -e "  ${GREEN}./run.sh docker${NC}             - Apenas inicia Docker (PostgreSQL + pgAdmin)"
     echo -e "  ${GREEN}./run.sh docker-stop${NC}        - Para containers Docker"
     echo -e "  ${GREEN}./run.sh run${NC}                - Apenas executa a API"
+    echo -e "  ${GREEN}./run.sh stop${NC}               - Para a API Spring Boot"
     echo -e "  ${GREEN}./run.sh watch${NC}              - Executa mvn spring-boot:run com watch"
     echo -e "  ${GREEN}./run.sh help${NC}               - Mostra esta ajuda"
     echo ""
@@ -157,6 +158,35 @@ case "${1:-}" in
         check_java
         check_maven
         run_api
+        ;;
+    "stop")
+        echo -e "${BLUE}🛑 Parando API Spring Boot...${NC}"
+        
+        # Procura por processos Java que estão rodando a aplicação
+        PIDS=$(ps aux | grep "spring-boot:run" | grep -v grep | awk '{print $2}')
+        
+        if [ -z "$PIDS" ]; then
+            echo -e "${YELLOW}ℹ️ Nenhuma aplicação Spring Boot encontrada rodando${NC}"
+            exit 0
+        fi
+        
+        echo -e "${YELLOW}🔍 Encontrados processos: $PIDS${NC}"
+        
+        for PID in $PIDS; do
+            echo -e "${YELLOW}🛑 Parando processo $PID...${NC}"
+            kill $PID
+            
+            # Aguarda um pouco e verifica se parou
+            sleep 2
+            if ps -p $PID > /dev/null 2>&1; then
+                echo -e "${RED}⚠️ Processo $PID não parou, forçando...${NC}"
+                kill -9 $PID
+            else
+                echo -e "${GREEN}✅ Processo $PID parado com sucesso${NC}"
+            fi
+        done
+        
+        echo -e "${GREEN}✅ API Spring Boot parada${NC}"
         ;;
     "watch")
         echo -e "${BLUE}👀 Executando mvn spring-boot:run...${NC}"

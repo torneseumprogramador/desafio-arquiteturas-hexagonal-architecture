@@ -1,11 +1,14 @@
 package com.ecommerce.adapters.in.rest;
 
 import com.ecommerce.adapters.in.rest.dto.CreateOrderRequest;
+import com.ecommerce.adapters.in.rest.dto.UpdateOrderRequest;
 import com.ecommerce.adapters.in.rest.dto.OrderProductResponse;
 import com.ecommerce.adapters.in.rest.dto.OrderResponse;
 import com.ecommerce.adapters.in.rest.dto.ProductResponse;
 import com.ecommerce.adapters.in.rest.dto.UserResponse;
 import com.ecommerce.application.ports.in.CreateOrderUseCase;
+import com.ecommerce.application.ports.in.UpdateOrderUseCase;
+import com.ecommerce.application.ports.in.DeleteOrderUseCase;
 import com.ecommerce.application.ports.out.OrderRepository;
 import com.ecommerce.domain.model.Order;
 import com.ecommerce.domain.model.OrderProduct;
@@ -31,6 +34,8 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     private final CreateOrderUseCase createOrderUseCase;
+    private final UpdateOrderUseCase updateOrderUseCase;
+    private final DeleteOrderUseCase deleteOrderUseCase;
     private final OrderRepository orderRepository;
 
     @PostMapping
@@ -45,6 +50,31 @@ public class OrderController {
 
         OrderResponse response = toOrderResponse(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Atualizar Pedido", description = "Atualiza um pedido existente no sistema (apenas pedidos pendentes)")
+    public ResponseEntity<OrderResponse> updateOrder(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateOrderRequest request) {
+        
+        Order order = updateOrderUseCase.updateOrder(
+                id,
+                request.getUserId(),
+                request.getProductQuantities()
+        );
+
+        log.info("Order updated: {}", order);
+
+        return ResponseEntity.ok(toOrderResponse(order));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Deletar Pedido", description = "Remove um pedido do sistema (apenas pedidos pendentes)")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        deleteOrderUseCase.deleteOrder(id);
+        log.info("Order deleted: {}", id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
