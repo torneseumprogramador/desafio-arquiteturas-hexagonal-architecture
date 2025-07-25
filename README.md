@@ -80,6 +80,13 @@ src/main/java/com/ecommerce/
 
 ## ⚡ Como Executar
 
+### Pré-requisitos
+
+- Java 17 ou superior
+- Maven 3.6+
+- Docker e Docker Compose
+- jq (para o script interativo)
+
 ### Método Rápido (Recomendado)
 
 ```bash
@@ -90,6 +97,20 @@ cd desafio-arquiteturas-hexagonal-architecture
 # Execute o script que faz tudo automaticamente
 ./run.sh
 ```
+
+### Script Interativo
+
+```bash
+# Após iniciar a aplicação, use o script interativo para testar
+./scripts/interactive-api.sh
+```
+
+**Funcionalidades do Script Interativo:**
+- 👥 Gerenciamento completo de usuários (CRUD)
+- 📦 Gerenciamento completo de produtos (CRUD)
+- 🛒 Gerenciamento completo de pedidos (CRUD)
+- 💚 Verificação de saúde da API
+- 📚 Acesso à documentação Swagger
 
 ### Método Manual
 
